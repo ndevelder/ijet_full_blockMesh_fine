@@ -1,0 +1,84 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+dimensions      [0 1 -1 0 0 0 0];
+internalField   uniform (0.0 0.0 0.0);
+boundaryField
+{
+	INLET
+	{
+		type groovyBC ;
+		value uniform (0.0 -10.185 0.0);
+
+		lookuptables (
+		{
+			name uxdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/ux.csv";
+		}
+		{
+			name uydata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/uy.csv";
+		}
+		{
+			name uzdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/uz.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		evaluateDuringConstruction 1;
+		valueExpression "vector( uydata(pos().x), -1*uxdata(pos().x) , uzdata(pos().x) )";
+	} 
+	
+	OUTLET_TOP
+	{
+		type 	pressureInletOutletVelocity;
+		value uniform (0 0 0);
+	}
+
+	OUTLET_RIGHT
+	{
+		type 	zeroGradient;
+	}
+	
+    WALL_BOTTOM
+    {
+        type      fixedValue;
+        value     uniform (0 0 0);
+    }
+	
+    WALL_JET
+    {
+        type      fixedValue;
+        value     uniform (0 0 0);
+    }
+	
+    ROT_AXIS{
+		type	axis;
+	}		
+	
+    ROT_WALL_FORE{
+		type	wedge;
+	}
+	
+	ROT_WALL_AFT{
+		type	wedge;
+	}
+}
+// ************************************************************************* //

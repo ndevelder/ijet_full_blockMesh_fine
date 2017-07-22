@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      epsilon;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+dimensions      [0 2 -3 0 0 0 0];
+
+internalField   uniform 1.0; 
+
+boundaryField
+{
+	INLET
+	{
+		type groovyBC ;
+		value $internalField;
+
+		lookuptables (
+		{
+			name epsdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/epsilon.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		evaluateDuringConstruction 1;
+		valueExpression "epsdata(pos().x)";
+	} 
+	
+	OUTLET_TOP
+	{
+		type zeroGradient;
+	}
+
+	OUTLET_RIGHT
+	{
+		type zeroGradient;
+	}
+	
+    WALL_BOTTOM
+    {
+        type            epsilonLowReRoughWallTP;
+        ks              1e-10;
+		epsType			smooth;
+		sr				0.25;
+        value           uniform 1.0;
+    }
+	
+    WALL_JET
+    {
+        type            zeroGradient;
+    }
+	
+    ROT_AXIS{
+		type	axis;
+	}	
+	
+    ROT_WALL_FORE{
+		type	wedge;
+	}
+	
+	ROT_WALL_AFT{
+		type	wedge;
+	}
+}
+// ************************************************************************* //

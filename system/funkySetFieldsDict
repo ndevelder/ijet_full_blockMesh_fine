@@ -1,0 +1,153 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open Source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      funkySetFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+expressions
+(
+        Velocity
+        {        
+		field U;
+		keepPatches 1; //keep the boundary conditions that were set before
+		lookuptables (
+		{
+		name ufield;
+		outOfBounds clamp;
+		fileName "$FOAM_CASE/data/ufield.csv";
+		}
+		{
+		name wramp;
+		outOfBounds clamp;
+		fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+                interpolate true;
+		interpolationType cellPoint;
+                expression "vector(ufield(pos().y)*wramp(pos().x),-1.0*ufield(pos().x)*wramp(pos().y),0)";
+        }
+
+        Tppsi
+        {        
+		field tppsi;
+		keepPatches 1; //keep the boundary conditions that were set before	
+		lookuptables (
+		{
+			name psixdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsixfield.csv";
+		}
+		{
+			name psiydata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsiyfield.csv";
+		}
+		{
+			name psizdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsizfield.csv";
+		}
+		{
+			name wr;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+        	interpolate true;
+                interpolationType cellPoint;
+		expression "vector( wr(pos().y)*psiydata(pos().x), wr(pos().y)*psixdata(pos().x), wr(pos().y)*psizdata(pos().x) )";
+
+		}
+		Tpphi
+        {        
+		field tpphi;
+		keepPatches 1; //keep the boundary conditions that were set before	
+		lookuptables (
+		{
+			name tpphidata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tpphifield.csv";
+		}
+		{
+			name wr;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		expression "wr(pos().y)*tpphidata(pos().x)";
+
+		}
+		Nut
+        {        
+		field nut;
+		keepPatches 1; //keep the boundary conditions that were set before	
+		lookuptables (
+		{
+			name nutdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/nutfield.csv";
+		}
+		{
+			name wr;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		expression "wr(pos().y)*nutdata(pos().x)";
+		}
+		K
+        {        
+		field k;
+		keepPatches 1; //keep the boundary conditions that were set before	
+		lookuptables (
+		{
+			name kdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/kfield.csv";
+		}
+		{
+			name wr;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		expression "wr(pos().y)*kdata(pos().x)";
+		}
+		Eps
+        {        
+		field epsilon;
+		keepPatches 1; //keep the boundary conditions that were set before	
+		lookuptables (
+		{
+			name epsdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/epsilonfield.csv";
+		}
+		{
+			name wr;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/wallramp.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		expression "wr(pos().y)*epsdata(pos().x)";
+		}
+);

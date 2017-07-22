@@ -1,0 +1,74 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+dimensions      [0 2 -2 0 0 0 0];
+internalField   uniform 0.0; 
+boundaryField
+{
+	INLET
+	{
+		type groovyBC ;
+		value $internalField;
+
+		lookuptables (
+		{
+			name pdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/p.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		evaluateDuringConstruction 1;
+		valueExpression "pdata(pos().x)";
+	} 
+	
+	OUTLET_TOP
+	{
+        type            totalPressure;
+	p0 		uniform 0.0;
+	gamma 1;
+	}
+
+	OUTLET_RIGHT
+	{
+        type            fixedValue;
+        value           uniform 0.0;
+	}
+	
+    WALL_BOTTOM
+    {
+        type            zeroGradient;
+    }
+	
+    WALL_JET
+    {
+        type            zeroGradient;
+    }
+	
+    ROT_AXIS{
+		type	axis;
+	}	
+	
+    ROT_WALL_FORE{
+		type	wedge;
+	}
+	
+	ROT_WALL_AFT{
+		type	wedge;
+	}
+}
+// ************************************************************************* //

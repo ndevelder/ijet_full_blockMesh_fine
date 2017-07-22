@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| ========= | |
+| \\ / F ield | OpenFOAM: The Open Source CFD Toolbox |
+| \\ / O peration | Version: 2.1.x |
+| \\ / A nd | Web: www.OpenFOAM.org |
+| \\/ M anipulation | |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object createPatchDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+pointSync false;
+
+patchInfo
+(
+   {
+      name ROT_WALL_FORE;
+   
+      dictionary
+      {
+		type wedge;
+      }
+   
+       constructFrom patches;
+       patches (defaultFaces_pos);
+   }
+   {
+      name ROT_WALL_AFT;
+   
+      dictionary
+      {
+		type wedge;
+      }
+   
+       constructFrom patches;
+       patches (defaultFaces_neg);
+   }
+
+);
+
+
+// ************************************************************************* //

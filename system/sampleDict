@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| ========= | |
+| \\ / F ield | OpenFOAM: The Open Source CFD Toolbox |
+| \\ / O peration | Version: 2.1.x |
+| \\ / A nd | Web: www.OpenFOAM.org |
+| \\/ M anipulation | |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+setFormat raw;
+
+surfaceFormat raw;
+
+interpolationScheme cell;
+
+// Fields to sample.
+fields
+(
+    U
+    p
+    k
+    epsilon
+    tpphi
+    tppsi
+    vorticity
+    nut
+	epsHat
+	tpProd
+);
+
+sets
+(
+    line00
+    {
+        type        face;
+        axis        y;
+
+        start       (0.00001 0.2 0.0);
+        end         (0.00001 0.0 0.0);
+    }
+    line05
+    {
+        type        face;
+        axis        y;
+
+        start       (0.051 0.2 0.0);
+        end         (0.051 0.0 0.0);
+    }
+    line10
+    {
+        type        face;
+        axis        y;
+
+        start       (0.101 0.4 0.0);
+        end         (0.101 0.0 0.0);
+    }
+    line15
+    {
+        type        face;
+        axis        y;
+
+        start       (0.151 0.4 0.0);
+        end         (0.151 0.0 0.0);
+    }
+    line20
+    {
+        type        face;
+        axis        y;
+
+        start       (0.201 0.4 0.0);
+        end         (0.201 0.0 0.0);
+    }
+    line25
+    {
+        type        face;
+        axis        y;
+
+        start       (0.251 0.4 0.0);
+        end         (0.251 0.0 0.0);
+    }
+    line30
+    {
+        type        face;
+        axis        y;
+
+        start       (0.301 0.4 0.0);
+        end         (0.301 0.0 0.0);
+    }
+
+);
+
+surfaces
+(
+);
+
+
+// *********************************************************************** //

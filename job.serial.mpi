@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#BSUB -J ijet_pipe3     # Job Name
+#BSUB -n 1                  # 
+#BSUB -R "rusage[mem=2048]"  # ask for 2GB per job slot, or 8GB total
+#BSUB -W 48:00               # How much time does your job need (HH:MM)
+#BSUB -q long                # which queue we want to run in
+#BSUB -R "span[ptile=1]"     # How do we distribute nodes
+#BSUB -oo "log.%J.out"            # Append to output file
+#BSUB -eo "error.%J.err"            # Append to error file
+#BSUB -R "select[model == Intel_EM64T]" # Target only Intel CPUs
+
+export LD_PRELOAD=/home/nd29a/mpi/mvapich2/lib/libmpi.so
+export MV2_VBUF_TOTAL_SIZE=256000
+export MV2_IBA_EAGER_THRESHOLD=255996
+
+source $HOME/foam/modules
+source $HOME/foam/foam-extend-3.2/etc/bashrc
+
+pimpleFoam

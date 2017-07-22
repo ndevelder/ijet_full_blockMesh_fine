@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#BSUB -J ijet_fulltri     # Job Name
+#BSUB -n 8                  # 
+#BSUB -R "rusage[mem=2048]"  # ask for 2GB per job slot, or 8GB total
+#BSUB -W 32:00               # How much time does your job need (HH:MM)
+#BSUB -q long                # which queue we want to run in
+#BSUB -oo "log.%J.out"            # Append to output file
+#BSUB -eo "error.%J.err"            # Append to error file
+
+export LD_PRELOAD=/home/nd29a/mpi/mvapich2/lib/libmpi.so
+export MV2_VBUF_TOTAL_SIZE=256000
+export MV2_IBA_EAGER_THRESHOLD=255996
+
+source $HOME/foam/modules
+source $HOME/foam/foam-extend-3.2/etc/bashrc
+
+mpirun -np 8 pimpleFoam -parallel

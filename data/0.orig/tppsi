@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     3.1                                |
+|   \\  /    A nd           | Web:         http://www.extend-project.de       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      tppsi;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+dimensions      [0 0 0 0 0 0 0];
+internalField   uniform (0.0 0.0 0.0);
+boundaryField
+{
+	INLET
+	{
+		type groovyBC ;
+		value $internalField;
+
+		lookuptables (
+		{
+			name psixdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsix.csv";
+		}
+		{
+			name psiydata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsiy.csv";
+		}
+		{
+			name psizdata;
+			outOfBounds clamp;
+			fileName "$FOAM_CASE/data/tppsiz.csv";
+		}
+		);
+        interpolate true;
+		interpolationType cellPoint;
+		evaluateDuringConstruction 1;
+		valueExpression "vector( psiydata(pos().x), -1.0*psixdata(pos().x), psizdata(pos().x) )";
+	} 
+	
+	OUTLET_TOP
+	{
+		type zeroGradient;
+	}
+
+	OUTLET_RIGHT
+	{
+		type zeroGradient;
+	}
+	
+    WALL_BOTTOM
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+	
+    WALL_JET
+    {
+        type            fixedValue;
+	value		uniform (0 0 0); 
+    }
+	
+    ROT_AXIS{
+		type	axis;
+	}		
+	
+    ROT_WALL_FORE{
+		type	wedge;
+	}
+	
+	ROT_WALL_AFT{
+		type	wedge;
+	}
+}
+// ************************************************************************* //
